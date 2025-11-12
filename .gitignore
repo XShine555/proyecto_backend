@@ -122,3 +122,7 @@ credentials.json
 # Other
 *.bak
 *.swp
+
+# Keys
+*.crt
+*.key
