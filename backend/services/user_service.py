@@ -1,4 +1,4 @@
-from datetime import datetime, timezone
+import datetime
 from sqlalchemy import func
 from sqlmodel import Session, and_, select
 
@@ -72,8 +72,8 @@ class UserService:
     def has_assisted(self, user: Usuari, date: datetime) -> bool:
         session: Session = self.__session_factory()
         try:
-            start_of_day = datetime(date.year, date.month, date.day, tzinfo=timezone.utc)
-            end_of_day = datetime(date.year, date.month, date.day, 23, 59, 59, tzinfo=timezone.utc)
+            start_of_day = datetime(date.year, date.month, date.day, tzinfo=datetime.timezone.utc)
+            end_of_day = datetime(date.year, date.month, date.day, 23, 59, 59, tzinfo=datetime.timezone.utc)
 
             assistencia = session.exec(
                 select(func.count()).where(
