@@ -16,7 +16,7 @@ class Justificacio(SQLModel, table=True):
     motiu: str
     document: Optional[str] = None
     estat: TipusJustificacioEnum = TipusJustificacioEnum.pendiente
-    data_solicitud: datetime = Field(default_factory=datetime.now(timezone.utc))
+    data_solicitud: datetime = Field(default_factory=lambda: datetime.now(timezone))
 
     assistencia: "Assistencia" = Relationship(back_populates="justificacions")
 

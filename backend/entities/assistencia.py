@@ -18,7 +18,7 @@ class Assistencia(SQLModel, table=True):
     usuari_id: int = Field(foreign_key="USUARIS.id")
     dispositiu_id: int = Field(foreign_key="DISPOSITIUS.id")
     horari_id: int = Field(foreign_key="HORARIS.id")
-    timestamp: datetime = Field(default_factory=datetime.now(timezone.utc))
+    timestamp: datetime = Field(default_factory=lambda: datetime.now(timezone))
     tipus_registre: TipusRegistreEnum
 
     usuari: "Usuari" = Relationship(back_populates="assistencies")
