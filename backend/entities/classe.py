@@ -5,7 +5,7 @@ from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from entities.dispositiu import Dispositiu
     from entities.horari import Horari
-    from app.entities.usuari_classe import UsuariClasse
+    from entities.usuari_classe import UsuariClasse
 
 class Classe(SQLModel, table=True):
     __tablename__ = "CLASSES"

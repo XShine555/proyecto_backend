@@ -6,7 +6,7 @@ from entities.tipus_usuari import TipusUsuariEnum
 if TYPE_CHECKING:
     from entities.alerta import Alerta
     from entities.assistencia import Assistencia
-    from app.entities.usuari_classe import UsuariClasse
+    from entities.usuari_classe import UsuariClasse
 
 class Usuari(SQLModel, table=True):
     __tablename__ = "USUARIS"
