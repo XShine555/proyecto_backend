@@ -69,11 +69,11 @@ class UserService:
         finally:
             session.close()
 
-    def has_assisted(self, user: Usuari, date: datetime) -> bool:
+    def has_assisted(self, user: Usuari, date: datetime.datetime) -> bool:
         session: Session = self.__session_factory()
         try:
-            start_of_day = datetime(date.year, date.month, date.day, tzinfo=datetime.timezone.utc)
-            end_of_day = datetime(date.year, date.month, date.day, 23, 59, 59, tzinfo=datetime.timezone.utc)
+            start_of_day = datetime.datetime(date.year, date.month, date.day, tzinfo=datetime.timezone.utc)
+            end_of_day = datetime.datetime(date.year, date.month, date.day, 23, 59, 59, tzinfo=datetime.timezone.utc)
 
             assistencia = session.exec(
                 select(func.count()).where(
