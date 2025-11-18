@@ -50,7 +50,7 @@ class UserService:
                 self.__logger.info(f"Access denied: User {user_id} has no permission for class {classe.id}.")
                 return False
 
-            timestamp_now = datetime.now(timezone.utc)
+            timestamp_now = datetime.now()
             horaris = session.exec(
                 select(func.count(Horari.id)).where(
                     Horari.classe == classe,

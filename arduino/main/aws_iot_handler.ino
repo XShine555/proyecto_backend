@@ -49,7 +49,7 @@ void awsSendUidCode(const char* uid) {
 
   JsonDocument doc;
   doc["thing_name"] = AWS_IOT_THINGNAME;
-  doc["device_id"] = "1";
+  doc["device_id"] = getEfuseMac();
   doc["rfid_id"] = uid;
 
   String output;
