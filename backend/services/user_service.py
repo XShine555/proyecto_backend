@@ -1,6 +1,6 @@
 from datetime import datetime, timezone
 from sqlalchemy import func
-from sqlmodel import Session, select
+from sqlmodel import Session, and_, select
 
 from entities.classe import Classe
 from entities.dispositiu import Dispositiu
@@ -77,11 +77,12 @@ class UserService:
 
             assistencia = session.exec(
                 select(func.count()).where(
-                    Usuari.assistencies,
                     Usuari.id == user.id,
                     Usuari.assistencies.any(
-                        lambda a: a.timestamp_assistencia >= start_of_day,
-                        lambda a: a.timestamp_assistencia <= end_of_day
+                        and_(
+                            Assistencia.timestamp >= start_of_day,
+                            Assistencia.timestamp <= end_of_day
+                        )
                     )
                 )
             ).one()
