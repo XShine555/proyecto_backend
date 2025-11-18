@@ -7,6 +7,7 @@ from entities.dispositiu import Dispositiu
 from entities.horari import Horari
 from entities.usuari import Usuari
 from entities.usuari_classe import UsuariClasse
+from entities.assistencia import Assistencia
 
 class UserService:
     def __init__(self, session_factory, logger):
@@ -65,5 +66,39 @@ class UserService:
             
             self.__logger.info(f"Access granted: User {user_id} to device {device_id}.")
             return True
+        finally:
+            session.close()
+
+    def has_assisted(self, user: Usuari, date: datetime) -> bool:
+        session: Session = self.__session_factory()
+        try:
+            start_of_day = datetime(date.year, date.month, date.day, tzinfo=timezone.utc)
+            end_of_day = datetime(date.year, date.month, date.day, 23, 59, 59, tzinfo=timezone.utc)
+
+            assistencia = session.exec(
+                select(func.count()).where(
+                    Usuari.assistencies,
+                    Usuari.id == user.id,
+                    Usuari.assistencies.any(
+                        lambda a: a.timestamp_assistencia >= start_of_day,
+                        lambda a: a.timestamp_assistencia <= end_of_day
+                    )
+                )
+            ).one()
+
+            return assistencia > 0
+        finally:
+            session.close()
+
+    def mark_assistance(self, user: Usuari) -> None:
+        session: Session = self.__session_factory()
+        try:
+            new_assistance = Assistencia(
+                usuari_id=user.id,
+                timestamp_assistencia=datetime.now(timezone.utc)
+            )
+            session.add(new_assistance)
+            session.commit()
+            self.__logger.info(f"Assistance recorded for user {user.id}.")
         finally:
             session.close()

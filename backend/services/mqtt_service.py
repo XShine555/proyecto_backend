@@ -3,6 +3,7 @@ from pathlib import Path
 from json import loads as json_loads, dumps as json_dumps
 import paho.mqtt.client as mqtt
 import ssl
+from datetime import datetime
 
 from services.user_service import UserService
 
@@ -75,6 +76,19 @@ class MQTTService:
             self.publish(thing_name, json_response)
             return
             
+        has_assisted = self.__user_service.has_assisted(user, datetime.now())
+        if has_assisted:
+            json_response = json_dumps({
+                "userId": user.id,
+                "username": f"{user.nom} {user.cognoms}",
+                "isAllowed": False,
+                "errorMessage": "User has already assisted today"
+            })
+            self.publish(thing_name, json_response)
+            self.__logger.info(f"User {user.nom} {user.cognoms} (Id: {user.id}) has already assisted today.")
+            return
+        
+        self.__user_service.mark_assistance(user)
         
         json_response = json_dumps({
             "userId": user.id,
