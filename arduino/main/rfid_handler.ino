@@ -1,5 +1,9 @@
 #include <ArduinoJson.h>
 
+// Forward declarations for LED control
+void ledSuccess();
+void ledError();
+
 #define RFID_LOG_PREFIX "RFID"
 #define RFID_MESSAGE_COOLDOWN 5000
 
@@ -25,9 +29,11 @@ void rfidOnAwsMessageReceived(JsonDocument& doc) {
   if (isAllowed) {
     String username = doc["username"].as<String>();
     setLcdMessage("Bienvenido " + username, 0, 5000);
+    ledSuccess();
   }
   else {
     setLcdMessage("Acceso denegado.", 0, 5000);
+    ledError();
   }
 }
 
@@ -49,8 +55,11 @@ String tryReadRfid() {
     return uid;
   }
 
-  if (!rfid.PICC_ReadCardSerial())
+  if (!rfid.PICC_ReadCardSerial()) {
+    ledError();
+    rfid.PCD_Init();
     return uid;
+  }
 
   for (byte i = 0; i < rfid.uid.size; i++) {
     if (rfid.uid.uidByte[i] < 0x10) {
@@ -71,6 +80,7 @@ void loopRfid() {
     rfidIsWaitingForMessage = false;
     rfidWaitingMessageTime = 0;
     setLcdMessage("Error.", 0, 2500);
+    ledError();
   }
 
   String uid = tryReadRfid();

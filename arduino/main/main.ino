@@ -6,6 +6,7 @@ void setup() {
   Serial.begin(9600);
   Serial.println("eFuse Mac: " + getEfuseMac());
 
+  setupLed();    // initialize LED (PIN 15)
   setupLcd();
   setupRfid();
   setupAWS();
@@ -19,6 +20,8 @@ void loop() {
 
   loopRfid();
   loopLcd();
+
+  loopLed();     // handle LED state machine
 }
 
 String getEfuseMac() {
